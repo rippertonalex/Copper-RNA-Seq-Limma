@@ -1,0 +1,504 @@
+---
+title: "RNAseq Project"
+author: "Alex Ripperton"
+date: "7/23/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing data
+
+
+```{r}
+#Importing Dat
+setwd("~/Desktop/RNAseq/FInal_Raw_counts")
+S12_S22_L003_R1_001 <- read.delim(file ='AJ-S12_S22_L003_R1_001.sam.txt')
+S12_S22_L004_R1_001 <-read.delim(file = 'AJ-S12_S22_L004_R1_001.sam.txt')
+S13_S23_L003_R1_001 <-read.delim(file = 'AJ-S13_S23_L003_R1_001.sam.txt')
+S14_S24_L003_R1_001 <-read.delim(file = 'AJ-S14_S24_L003_R1_001.sam.txt')
+S15_S25_L003_R1_001 <-read.delim(file = 'AJ-S15_S25_L003_R1_001.sam.txt')
+S11_S21_L004_R1_001 <-read.delim(file = 'AJ-S11_S21_L004_R1_001.sam.txt')
+S10_S20_L003_R1_001 <-read.delim(file = 'AJ-S10_S20_L003_R1_001.sam.txt')
+S10_S20_L004_R1_001 <-read.delim(file = 'AJ-S10_S20_L004_R1_001.sam.txt')
+S11_S21_L003_R1_001 <-read.delim(file = 'AJ-S11_S21_L003_R1_001.sam.txt')
+S14_S24_L004_R1_001 <-read.delim(file = 'AJ-S14_S24_L004_R1_001.sam.txt')
+S15_S25_L004_R1_001 <-read.delim(file = 'AJ-S15_S25_L004_R1_001.sam.txt')
+S13_S23_L004_R1_001 <-read.delim(file = 'AJ-S13_S23_L004_R1_001.sam.txt')
+S16_S26_L003_R1_001 <-read.delim(file = 'AJ-S16_S26_L003_R1_001.sam.txt')
+S16_S26_L004_R1_001 <-read.delim(file = 'AJ-S16_S26_L004_R1_001.sam.txt')
+S17_S27_L003_R1_001 <-read.delim(file = 'AJ-S17_S27_L003_R1_001.sam.txt')
+S17_S27_L004_R1_001 <-read.delim(file = 'AJ-S17_S27_L004_R1_001.sam.txt')
+S18_S28_L003_R1_001 <-read.delim(file = 'AJ-S18_S28_L003_R1_001.sam.txt')
+S18_S28_L004_R1_001 <-read.delim(file = 'AJ-S18_S28_L004_R1_001.sam.txt')
+S1_S11_L003_R1_001 <-read.delim(file = 'AJ-S1_S11_L003_R1_001.sam.txt')
+S1_S11_L004_R1_001 <-read.delim(file = 'AJ-S1_S11_L004_R1_001.sam.txt')
+S2_S12_L003_R1_001 <-read.delim(file = 'AJ-S2_S12_L003_R1_001.sam.txt')
+S2_S12_L004_R1_001 <-read.delim(file = 'AJ-S2_S12_L004_R1_001.sam.txt')
+S3_S13_L003_R1_001 <-read.delim(file = 'AJ-S3_S13_L003_R1_001.sam.txt')
+S3_S13_L004_R1_001 <-read.delim(file = 'AJ-S3_S13_L004_R1_001.sam.txt')
+S4_S14_L003_R1_001 <-read.delim(file = 'AJ-S4_S14_L003_R1_001.sam.txt')
+S4_S14_L004_R1_001 <-read.delim(file = 'AJ-S4_S14_L004_R1_001.sam.txt')
+S5_S15_L003_R1_001 <-read.delim(file = 'AJ-S5_S15_L003_R1_001.sam.txt')
+S5_S15_L004_R1_001 <-read.delim(file = 'AJ-S5_S15_L004_R1_001.sam.txt')
+S6_S16_L003_R1_001 <-read.delim(file = 'AJ-S6_S16_L003_R1_001.sam.txt')
+S6_S16_L004_R1_001 <-read.delim(file = 'AJ-S6_S16_L004_R1_001.sam.txt')
+S7_S17_L003_R1_001 <-read.delim(file = 'AJ-S7_S17_L003_R1_001.sam.txt')
+S7_S17_L004_R1_001 <-read.delim(file = 'AJ-S7_S17_L004_R1_001.sam.txt')
+S8_S18_L003_R1_001 <-read.delim(file = 'AJ-S8_S18_L003_R1_001.sam.txt')
+S8_S18_L004_R1_001 <-read.delim(file = 'AJ-S8_S18_L004_R1_001.sam.txt')
+S9_S19_L003_R1_001 <-read.delim(file = 'AJ-S9_S19_L003_R1_001.sam.txt')
+S9_S19_L004_R1_001 <-read.delim(file = 'AJ-S9_S19_L004_R1_001.sam.txt')
+
+```
+
+## Merging Data frame
+
+You can also embed plots, for example:
+
+```{r}
+#merging the data into one data frame and renaming the columns to the names of the 
+#libraries 
+library(plyr)
+merged <- merge(x = S12_S22_L003_R1_001, y= S12_S22_L004_R1_001, by ='MgTOL.A0001.v5.0')
+merged <- rename(merged, c("X4" = "S12_S22_L003_R1_001"))
+merged_1 <- merge(x = merged , y = S13_S23_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_1 <- rename(merged_1, c("X2" = "S12_S22_L004_R1_001", "X3" = "S13_S23_L003_R1_001" ))
+merged_2 <- merge(x = merged_1 , y = S14_S24_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_2 <- rename(merged_2, c("X3" = "S14_S24_L003_R1_001"))
+merged_3 <- merge(x = merged_2 , y = S15_S25_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_3 <- rename(merged_3, c("X4" = "S15_S25_L003_R1_001"))
+merged_4 <- merge(x = merged_3 , y = S11_S21_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_4 <- rename(merged_4, c("X1" = "S11_S21_L004_R1_001"))
+merged_5 <- merge(x = merged_4 , y = S10_S20_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_5 <- rename(merged_5, c("X5" = "S10_S20_L003_R1_001"))
+merged_6 <- merge(x = merged_5 , y = S10_S20_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_6 <- rename(merged_6, c("X4" = "S10_S20_L004_R1_001"))
+merged_7 <- merge(x = merged_6 , y = S11_S21_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_7 <- rename(merged_7, c("X3" = "S11_S21_L003_R1_001"))
+merged_8 <- merge(x = merged_7 , y = S14_S24_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_8 <- rename(merged_8, c("X3" = "S14_S24_L004_R1_001"))
+merged_9 <- merge(x = merged_8 , y = S15_S25_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_9 <- rename(merged_9, c("X3" = "S15_S25_L004_R1_001"))
+merged_10 <- merge(x = merged_9 , y = S13_S23_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_10 <- rename(merged_10, c("X3" = "S13_S23_L004_R1_001"))
+merged_11 <- merge(x = merged_10 , y = S16_S26_L003_R1_001, by ='MgTOL.A0001.v5.0')
+merged_11 <- rename(merged_11, c("X8" = "S16_S26_L003_R1_001"))
+merged_12 <- merge(x = merged_11, y = S16_S26_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_12 <- rename(merged_12, c("X4" = "S16_S26_L004_R1_001"))
+merged_13 <- merge(x = merged_12, y = S17_S27_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_13 <- rename(merged_13, c("X2" = "S17_S27_L003_R1_001"))
+merged_14 <- merge(x = merged_13, y = S17_S27_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_14 <- rename(merged_14, c("X3" = "S17_S27_L004_R1_001"))
+merged_15 <- merge(x = merged_14, y = S18_S28_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_15 <- rename(merged_15, c("X2" = "S18_S28_L003_R1_001"))
+merged_16 <- merge(x = merged_15, y = S18_S28_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_16 <- rename(merged_16, c("X2" = "S18_S28_L004_R1_001"))
+merged_17 <- merge(x = merged_16, y = S1_S11_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_17 <- rename(merged_17, c("X7" = "S1_S11_L003_R1_001"))
+merged_18 <- merge(x = merged_17, y = S1_S11_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_18 <- rename(merged_18, c("X0" = "S1_S11_L004_R1_001"))
+merged_19 <- merge(x = merged_18, y = S2_S12_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_19 <- rename(merged_19, c("X3" = "S2_S12_L003_R1_001"))
+merged_20 <- merge(x = merged_19, y = S2_S12_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_20 <- rename(merged_20, c("X3" = "S2_S12_L004_R1_001"))
+merged_21 <- merge(x = merged_20, y = S3_S13_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_21 <- rename(merged_21, c("X4" = "S3_S13_L003_R1_001"))
+merged_22 <- merge(x = merged_21, y = S3_S13_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_22 <- rename(merged_22, c("X4" = "S3_S13_L004_R1_001"))
+merged_23 <- merge(x = merged_22, y = S4_S14_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_23 <- rename(merged_23, c("X0" = "S4_S14_L003_R1_001"))
+merged_24 <- merge(x = merged_23, y = S4_S14_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_24 <- rename(merged_24, c("X5" = "SS4_S14_L004_R1_001"))
+merged_25 <- merge(x = merged_24, y = S5_S15_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_25 <- rename(merged_25, c("X11" = "S5_S15_L003_R1_001"))
+merged_26 <- merge(x = merged_25, y = S5_S15_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_26 <- rename(merged_26, c("X5" = "S5_S15_L004_R1_001"))
+merged_27 <- merge(x = merged_26, y = S6_S16_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_27 <- rename(merged_27, c("X3" = "S6_S16_L003_R1_001"))
+merged_28 <- merge(x = merged_27, y = S6_S16_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_28 <- rename(merged_28, c("X5" = "S6_S16_L004_R1_001"))
+merged_29 <- merge(x = merged_28, y = S7_S17_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_29 <- rename(merged_29, c("X3" = "S7_S17_L003_R1_001"))
+merged_30 <- merge(x = merged_29, y = S7_S17_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_30 <- rename(merged_30, c("X4" = "S7_S17_L004_R1_001"))
+merged_31 <- merge(x = merged_30, y = S8_S18_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_31 <- rename(merged_31, c("X3" = "S8_S18_L003_R1_001"))
+merged_32 <- merge(x = merged_31, y = S8_S18_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_32 <- rename(merged_32, c("X1" = "S8_S18_L004_R1_001"))
+merged_33 <- merge(x = merged_32, y = S9_S19_L003_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_33 <- rename(merged_33, c("X8" = "S9_S19_L003_R1_001"))
+merged_final <- merge(x = merged_33, y = S9_S19_L004_R1_001, by = 'MgTOL.A0001.v5.0')
+merged_final <- rename(merged_final, c("X8" = "S9_S19_L004_R1_001"))
+merged_final
+write.csv(merged_final, "copper_raw_counts.csv")
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+```
+## Finding Number of Unique reads
+
+```{r}
+#summing the uniquely mapped reads meaning how many times a sequence (50bp) mappped to exactly that region in the genome
+library(reshape2)
+library(tidyr)
+temp_table = subset(merged_final, select = -c(MgTOL.A0001.v5.0) )
+temp_table_2 = (temp_table[-c(1,2,3,4,5), ])
+total_read_data <- colSums( temp_table_2, dims = 1:1)
+final_read_data <- melt(total_read_data)
+final_read_data
+```
+## Histogram of Unique reads
+```{r}
+#Plotting uniquely mapped reads with histogram
+library(ggplot2)
+read_count_plot <- ggplot(final_read_data, aes(x = value)) + geom_histogram(binwidth = 30000)+ labs(title = "Histogram of unique read counts", 
+                                       x = "Unique Read Counts")
+read_count_plot
+final_read_data
+```
+## Importing Library Information
+```{r}
+setwd("~/Desktop/RNAseq/FInal_Raw_counts")
+Library_info <- read.csv(file = "RNA libraries map rates - Sheet1.csv")
+Library_info <- rename(Library_info, c("Genotype..CCC..MED..F1." = "Genotype"))
+Library_info
+```
+## Scatter Plotting gene counts
+```{r}
+gene_count_plot <- ggplot(Library_info, aes(x = Unique.map.rate, y = Total.gene.counts, color = Tol.or.Nontol)) + geom_point()
+gene_count_plot
+
+```
+## Bar chart of Gene counts
+```{r}
+gene_count_bar <- ggplot(Library_info, aes(x = Genotype, y = Total.gene.counts, fill = Tol.or.Nontol, )) + geom_bar(stat = "identity", postion = "dodge") + labs(title = "Gene counts by genotype", y = "Total Gene Counts") + labs(fill = "Genotype")
+gene_count_bar
+
+
+gene_count_bar_2 <- ggplot(Library_info, aes(x = Genotype, y = Total.gene.counts, fill = Control.vs.exp )) + geom_bar(stat = "identity", postion = "dodge") + labs(title = "Gene counts by treatment", y = "Total Gene Counts") + labs(fill = "Treatment")
+```
+
+
+```{r}
+gene_count_bar_2
+```
+## learning limma importation of gene reads
+```{r}
+library(limma)
+library(edgeRun)
+setwd("~/Desktop/RNAseq/FInal_Raw_counts")
+targets <- readTargets("AJ-S12_S22_L003_R1_001.sam.txt")
+x <- readDGE('AJ-S12_S22_L003_R1_001.sam.txt')
+targets
+x
+```
+## learning limma genome annotations
+```{r}
+## We need genome annotations in order to figure out why the genes that are deferentially expressed are significant based on what function they have in the mimulus genome 
+
+
+summed_GeneCounts
+```
+
+
+## Actual Limma analysis 
+```{r}
+setwd("~/Desktop/RNAseq/FInal_Raw_counts")
+library(edgeR)
+library(gplots)
+library(RColorBrewer)
+library(limma)
+
+pValCut <- 0.05
+
+
+shortName <- "genome_GAcounts_wtTreatment_filterd_3libs"
+## Pre
+outDir = paste0("06_DGE/",shortName)
+dir.create(outDir,showWarnings = F,recursive = T)
+doFilter <- T
+  if (doFilter) {
+  removeSamples <- c("S8_S18") }
+
+
+imgPath <- paste0(outDir,"/DE_limmaVoom_Analysis_",shortName,".pdf")
+pdf(imgPath,paper = "USr")
+
+imgPath
+
+
+
+## GeneCounts <- read.csv("05_RawCounts/RawCounts_bwt2_genome.csv",row.names = 1) #1 gene
+# rownames(GeneCounts) <- gsub("\\.[0-9].*$","",rownames(GeneCounts))    this is what joel did
+#I already imported my data
+
+GeneCounts <- summed_GeneCounts
+
+
+
+## I removed datainfo intermediate table becasue it was uneccesarry with our meta data file 
+## Importing meta data
+
+meta <- read.csv("Sum_copper_meta.csv",as.is = T,row.names = 1)
+
+## dropping the two bad libs I believe that is all of jeols big chunk was doing was deleting libs that werent valid but he automated it becasue he had so many more libraries 
+
+meta <- meta[-c(9), ]
+GeneCounts <- subset(GeneCounts, select =  -c(9))
+
+
+GeneCounts
+meta
+
+## DO I need to remove genes that aren't expressed in any of the libraries
+
+
+## Linear Modeling 
+
+Genotype <- relevel(as.factor(meta$Broad_Genotype_treatment),ref="MED_C")
+Genotype
+meta$Genotype <- relevel(as.factor(meta$Broad_Genotype_treatment),ref="MED_C")
+meta$Genotype
+
+## Design Matrix
+## ~0 + Genotype + Treatment + Genotype:Treatment
+
+design <- model.matrix(~0+Genotype, data =meta)#+Lane
+colnames(design) <- gsub("meta|Name|Genotype|Treatment|:|-|/|Group","",colnames(design))
+head(design)
+
+### Use cpms to uncover lowly expressed genes
+dge <- DGEList(counts=GeneCounts,remove.zeros = T)
+# Filter: Genes with total counts more than 
+filterCPM <- TRUE #Or FALSE
+if (!filterCPM){
+  cat ("Filtering by minCounts")
+  minCount <- 50
+  A <- rowSums(dge$counts)
+  isexpr <- A > minCount
+  table(isexpr)
+} else {
+  # # OR
+  cat ("Filtering by CPM")
+  range(table(meta$Genotype))
+  sampleMin <- min(table(meta$Genotype))
+  minCPM <- 1
+  isexpr <- rowSums(cpm(dge) > minCPM) >= sampleMin #Make sure to use the minimum number of reps
+}
+
+table(isexpr)
+cat("Removing lowly expressed genes ( <",minCPM,"cpm on at least",sampleMin,"samples) \n")
+
+cat("Removing",table(isexpr)[1],"genes \n")
+cat("Remaining number of genes:",table(isexpr)[2],"\n")
+dge <- dge[isexpr,,keep.lib.size = FALSE]
+
+## Do TMM normalization after filtering (otherwise lib sizes are unbalanced)
+dge <- calcNormFactors(dge)
+
+#In the limma-trend approach, the counts are converted to logCPM values using edgeR’s cpm function:
+#logCPM <- cpm(dge, log=TRUE, prior.count=1) #The prior count is used here to damp down the variances of logarithms of low counts
+#dim(logCPM)
+
+cpmNormalizedExpression  <- cpm(dge)
+#save(cpmNormalizedExpression,file = "06_DGE/cpmNormalizedExpression.RData")
+
+### Use voom directly on 
+#v <- voomWithQualityWeights(dge, design, plot=TRUE)
+#v <- voom(dge, design, plot = TRUE,normalize.method = "quantile") #"scale","cyclicloess" or "quantile"
+
+v <- voomWithQualityWeights(dge, design=design, plot=TRUE)
+dim(v)
+v
+library(RColorBrewer)
+
+## Plotting
+par(mfrow=c(1,1))
+#Or just use glimma
+library(Glimma)
+glMDSPlot(v, labels=rownames(meta), groups=meta[,c("Genotype","Control","Genotype_treatment", "Broad_Genotype", "Broad_Genotype_treatment")],
+          folder=paste0(outDir,"/glimma"),
+          launch=T)
+
+## Fit
+v2 <- lmFit(v, design) #, block = meta$Set)#, correlation = cor$consensus)
+
+
+### do contrasts
+contrastMatrix <- makeContrasts(
+  # control contrasts
+  
+  "med_c-ccc_c"=(CCC_C-MED_C),
+  
+  "med_c-F1_c"=(F1_C-MED_C),
+  
+  "F1_c-ccc_c"=(F1_C-CCC_C),
+  
+  # Treatment Contrasts
+  
+  "med_e-ccc_e" = (CCC_E-MED_E),
+  
+  "med_e-F1_e" = (F1_E-MED_E),
+  
+  "F1_e-ccc_e" = (F1_E-CCC_E),
+  
+  # Same genotype contrasts
+  
+  "med_e-med_c" = (MED_E-MED_C),
+  
+  "F1_e-F1_c" = (F1_E-F1_C),
+    
+  "ccc_e-ccc_c" = (CCC_E-CCC_C),
+  
+  #Interactions
+  
+  "ccc-med_int"= (CCC_E - CCC_C) - (MED_E - MED_C),
+  
+  "F1-med_int" = ((F1_E - F1_C) - (MED_E - MED_C) ),
+  
+  "F1-ccc_int" = ((F1_E - F1_C)- (CCC_E - CCC_C)),
+  
+  
+  
+  levels = design)
+
+fit2 <- contrasts.fit(v2, contrastMatrix)
+fit2 <- eBayes(fit2)
+
+
+#######################
+results <- decideTests(fit2)#,lfc = logCut,p.value = pValCut)
+summary(results)
+
+DESummary
+if (ncol(results) <= 5){
+  vennDiagram(results,include = c("up","down"))
+}
+
+DESummary <- t(summary(decideTests(fit2)))
+# --
+
+titulo <- paste0(outDir,"/DESummaryInteractions_",shortName,".csv")
+write.csv(x=DESummary,titulo,quote = F,row.names = T)
+
+titulo
+
+cat("decideTests() function results: \n")
+print(DESummary)
+
+voomNormalizedExpression <- v$E
+titulo <- paste0(outDir,"/voomNormalizedExpression",shortName,".RData")
+save(voomNormalizedExpression,file = titulo)
+
+
+## --
+logCut <- 1
+pValCut <- 0.05
+
+#####
+uniqContrasts <- colnames(contrastMatrix)
+
+cat("Genotypes that will be analyzed:" ,paste0(uniqContrasts),"\n")
+
+### Prepare lists
+DEList <- list()
+DESignificant <- list()
+
+uniqContrasts <- uniqContrasts[grep("_",uniqContrasts)]
+#
+for (contrast in uniqContrasts){
+  cat(" - - - \n")
+  #
+  # Get indices that correspond to treatment, genotype and interaction
+ 
+  #genoIndex <- grep(contrast,colnames(fit2$coefficients))
+  dropContrasts <- contrast#c(genoIndex)#,treatIndex)
+  ##
+  contrastNames <- contrast#colnames(fit2$coefficients)[dropContrasts]
+  cat("Contrast:", paste0(contrastNames),"\n")
+  #
+  tmp <- topTable(fit2, coef=dropContrasts,number = Inf,sort.by = "none")
+  tmp[,"Symbol"] <- rownames(tmp)
+
+ 
+  ###Change names of columns
+  # Get indices of columns that correspond to logFC
+  #tmpIDX <- grep(paste(contrastNames,collapse="|"),colnames(tmp))
+  colnames(tmp) <- paste(contrast,colnames(tmp),sep = ".")
+  #colnames(tmp)[tmpIDX] <- paste(colnames(tmp)[tmpIDX],"logFC",sep = ".")
+  #
+  DEList[[contrast]] <- tmp
+ 
+  ## Filter
+  tmpIDX <- grep("adj.P.Val",colnames(tmp))
+  tmpSign <- tmp[tmp[,tmpIDX] < pValCut,]
+  nrow(tmpSign)
+  DESignificant[[contrast]] <- tmpSign
+  #
+  cat ("Number of DEGs on",contrast,":",nrow(tmpSign),"\n")
+  #cat("\n")
+  #
+}  
+
+###
+sapply(DEList,function(x){table(x[,grep("adj.P.Val",colnames(x))] < 0.05)})
+significantDE <- lapply(DEList,function(x){ x[x[,grep("adj.P.Val",colnames(x))] < 0.05,] })
+sapply(significantDE,nrow)
+##
+
+### Save full list
+titulo <- paste0(outDir,"/DEList",shortName,".RData")
+save(DEList,file = titulo)
+### Save list of significant genes
+titulo <- paste0(outDir,"/Significant_DElist",shortName,".RData")
+save(significantDE,file = titulo)
+
+#write code to print the significanteDE into csv format
+sigDE<-data.frame(t(sapply(significantDE,c)))
+
+write.csv(sigDE, "/Users/ripsmac/desktop/RNAseq/significantDE.csv")
+
+
+for (each in names(significantDE)){
+  fileTo <- paste0("/Users/ripsmac/desktop/RNAseq/",each,"_significantDE.csv")
+  write.csv(significantDE[[each]],file = fileTo)
+}
+"med_c-ccc_c"
+
+```
+
+## Go Analysis
+
+```{r}
+library(topGO)
+setwd("~/Desktop/RNAseq/Contrast_Data/")
+ccc_e_ccc_c_ <- read.csv(file = "ccc_e-ccc_c_significantDE.csv")
+ccc_med_int_ <- read.csv(file ="ccc_med_int_significantDE.csv")
+F1_c_ccc_c_ <- read.csv(file ="F1_c_ccc_c_significantDE.csv")
+F1_e_ccc_e_ <- read.csv(file ="F1_e_ccc_e_significantDE.csv")
+F1_e_F1_c_<- read.csv(file ="F1_e_F1_c_significantDE.csv")
+F1_ccc_int_ <- read.csv(file ="F1_ccc_int_significantDE.csv")
+F1_med_int_ <- read.csv(file ="F1_med_int_significantDE.csv")
+med_c_ccc_c_ <- read.csv(file ="med_c_ccc_c_significantDE.csv")
+med_c_F1_c_ <- read.csv(file ="med_c_F1_c_significantDE.csv")
+med_e_ccc_e_ <- read.csv(file ="med_e_ccc_e_significantDE.csv")
+med_e_F1_e_ <- read.csv(file ="med_e_F1_e_significantDE.csv")
+med_e_med_c_ <- read.csv(file ="med_e_med_c_significantDE.csv")
+topGO(ccc_e_ccc_c_) 
+
+
+```
+
+```{r}
+CCC_contrast_list <- list("MgTOLA0031.v5")
+CCC_contrast_list <- lapply(CCC_contrast_list,  sub, pattern = "\\.\\d+$", replacement = " ")
+CCC_contrast_list
+```
+
+
